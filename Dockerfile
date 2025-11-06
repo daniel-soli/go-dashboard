@@ -1,14 +1,17 @@
 # Build stage
-FROM golang:1.21-alpine AS builder
+FROM golang:alpine AS builder
 
 # Set working directory
 WORKDIR /app
+
+# Install git (needed for some Go modules)
+RUN apk add --no-cache git
 
 # Copy go mod files
 COPY go.mod go.sum ./
 
 # Download dependencies
-RUN go mod download
+RUN go mod download && go mod verify
 
 # Copy source code
 COPY . .
